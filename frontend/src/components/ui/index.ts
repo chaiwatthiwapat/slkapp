@@ -6,3 +6,4 @@ export * from './Modal';
 export * from './Table';
 export * from './Lookup';
 export * from './LookupDropdown';
+export * from './ContextMenu';

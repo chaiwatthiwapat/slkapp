@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Button, Icon, Input, Modal } from './components/ui';
 import { Navbar } from './features/workspace/Navbar';
+import { TabBar } from './features/workspace/TabBar';
+import { WelcomePage } from './features/workspace/WelcomePage';
 import { saleAndServiceMenu, type MenuItem } from './features/workspace/menu';
 import { createDocument, type SaleAndServiceDocument } from './features/sale-and-service/model';
 import { readDocuments } from './features/sale-and-service/storage';
@@ -47,7 +49,7 @@ export function App() {
     },
   ]);
   const [activeId, setActiveId] = useState<string | null>(firstId);
-  const [closing, setClosing] = useState<Tab | null>(null);
+  const [closing, setClosing] = useState<{ ids: string[]; fallbackId?: string } | null>(null);
   const [api, setApi] = useState<'checking' | 'online' | 'offline'>('checking');
   const active = tabs.find((tab) => tab.id === activeId);
   useEffect(() => {
@@ -92,16 +94,34 @@ export function App() {
     );
     setActiveId(id);
   }
-  function removeTab(id: string) {
-    const index = tabs.findIndex((tab) => tab.id === id);
-    const remaining = tabs.filter((tab) => tab.id !== id);
+  function removeTabs(ids: string[], fallbackId?: string) {
+    const targets = new Set(ids);
+    const remaining = tabs.filter((tab) => !targets.has(tab.id));
+    const activeIndex = tabs.findIndex((tab) => tab.id === activeId);
+    const next =
+      remaining.find((tab) => tab.id === activeId) ??
+      remaining.find((tab) => tab.id === fallbackId) ??
+      tabs
+        .slice(0, activeIndex)
+        .reverse()
+        .find((tab) => !targets.has(tab.id)) ??
+      remaining[0];
     setTabs(remaining);
-    if (activeId === id) setActiveId(remaining[Math.max(0, index - 1)]?.id ?? null);
+    setActiveId(next?.id ?? null);
     setClosing(null);
+    if (next) requestAnimationFrame(() => document.getElementById(`tab-${next.id}`)?.focus());
   }
-  function requestClose(tab: Tab) {
-    if (tab.dirty) setClosing(tab);
-    else removeTab(tab.id);
+  function requestClose(ids: string[], fallbackId?: string) {
+    const targets = tabs.filter((tab) => ids.includes(tab.id));
+    if (!targets.length) return;
+    if (targets.some((tab) => tab.dirty))
+      setClosing({ ids: targets.map((tab) => tab.id), fallbackId });
+    else removeTabs(ids, fallbackId);
+  }
+  function cancelClose() {
+    const focusId = closing?.fallbackId ?? activeId;
+    setClosing(null);
+    if (focusId) requestAnimationFrame(() => document.getElementById(`tab-${focusId}`)?.focus());
   }
   function setDirty(id: string, dirty: boolean) {
     setTabs((current) =>
@@ -113,78 +133,21 @@ export function App() {
   return (
     <div className="app-shell">
       <Navbar activeMenu={active?.menu.id} onOpen={openMenu} />
-      <div
-        className="editor-tabs"
-        role="tablist"
-        aria-label="หน้าที่เปิดอยู่"
-        onKeyDown={(event) => {
-          if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
-          const index = tabs.findIndex((tab) => tab.id === activeId);
-          const next =
-            event.key === 'Home'
-              ? 0
-              : event.key === 'End'
-                ? tabs.length - 1
-                : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-          const tab = tabs[next];
-          if (tab) {
-            event.preventDefault();
-            setActiveId(tab.id);
-            document.getElementById(`tab-${tab.id}`)?.focus();
-          }
-        }}
-      >
-        {tabs.map((tab, index) => (
-          <div key={tab.id} className={`editor-tab ${activeId === tab.id ? 'active' : ''}`}>
-            <button
-              role="tab"
-              id={`tab-${tab.id}`}
-              aria-selected={activeId === tab.id}
-              aria-controls={`panel-${tab.id}`}
-              tabIndex={activeId === tab.id ? 0 : -1}
-              onClick={() => setActiveId(tab.id)}
-            >
-              <Icon name={tab.menu.kind === 'sale-and-service' ? 'file' : 'grid'} size={14} />
-              <span>
-                {tab.menu.id} {tab.menu.title}
-              </span>
-              {tab.dirty && (
-                <span className="dirty-dot" title="ยังไม่ได้บันทึก" aria-hidden="true" />
-              )}
-            </button>
-            <button
-              className="tab-close"
-              aria-label={`ปิดแท็บ ${index + 1}`}
-              onClick={() => requestClose(tab)}
-            >
-              <Icon name="close" size={12} />
-            </button>
-          </div>
-        ))}
-        <Button
-          className="tab-add"
-          variant="ghost"
-          tone="neutral"
-          aria-label="เปิดเมนูขายสินค้า, บริการ"
-          title="เปิดหรือกลับไปเมนูขายสินค้า, บริการ"
-          onClick={() => openMenu(saleAndServiceMenu)}
-        >
-          <Icon name="plus" />
-        </Button>
-        <span className="tab-count">{tabs.length} หน้าที่เปิดอยู่</span>
-      </div>
-      <main className="workspace-main">
-        {tabs.length === 0 && (
-          <div className="empty-workspace">
-            <Icon name="grid" size={40} />
-            <h1>พื้นที่ทำงานของคุณ</h1>
-            <p>เลือกเมนูด้านบนเพื่อเริ่มทำงาน</p>
-            <Button variant="solid" onClick={() => openMenu(saleAndServiceMenu)}>
-              เปิดขายสินค้า, บริการ
-              <Icon name="arrow" />
-            </Button>
-          </div>
-        )}
+      {tabs.length > 0 && (
+        <TabBar
+          tabs={tabs.map((tab) => ({
+            id: tab.id,
+            title: `${tab.menu.id} ${tab.menu.title}`,
+            icon: tab.menu.kind === 'sale-and-service' ? 'file' : 'grid',
+            dirty: tab.dirty,
+          }))}
+          activeId={activeId}
+          onSelect={setActiveId}
+          onCloseTabs={requestClose}
+        />
+      )}
+      <main className={`workspace-main${tabs.length ? '' : ' is-empty'}`}>
+        {tabs.length === 0 && <WelcomePage />}
         {tabs.map((tab) => (
           <section
             key={tab.id}
@@ -200,7 +163,7 @@ export function App() {
                 initialDocument={tab.document!}
                 active={activeId === tab.id}
                 onDirtyChange={(dirty) => setDirty(tab.id, dirty)}
-                onClose={(discard) => (discard ? removeTab(tab.id) : requestClose(tab))}
+                onClose={(discard) => (discard ? removeTabs([tab.id]) : requestClose([tab.id]))}
               />
             ) : (
               <PlannedPage menu={tab.menu} />
@@ -228,20 +191,38 @@ export function App() {
       <Modal
         open={Boolean(closing)}
         title="ปิดแท็บที่ยังไม่ได้บันทึก?"
-        onClose={() => setClosing(null)}
+        onClose={cancelClose}
         width={430}
         footer={
           <>
-            <Button tone="neutral" onClick={() => setClosing(null)}>
+            <Button tone="neutral" onClick={cancelClose}>
               กลับไปทำงาน
             </Button>
-            <Button tone="danger" variant="solid" onClick={() => closing && removeTab(closing.id)}>
+            <Button
+              tone="danger"
+              variant="solid"
+              onClick={() => closing && removeTabs(closing.ids, closing.fallbackId)}
+            >
               ปิดและทิ้งการแก้ไข
             </Button>
           </>
         }
       >
-        <p>มีการแก้ไขในแท็บนี้ที่ยังไม่ได้บันทึก กรุณาบันทึกก่อนปิดหากต้องการเก็บข้อมูล</p>
+        <p>มีข้อมูลที่ยังไม่ได้บันทึกในแท็บที่จะปิด กรุณาบันทึกก่อนปิดหากต้องการเก็บข้อมูล</p>
+        {closing && (
+          <>
+            <p>คำสั่งนี้จะปิด {closing.ids.length} แท็บ โดยมีข้อมูลที่ยังไม่ได้บันทึกใน:</p>
+            <ul className="closing-tabs">
+              {tabs
+                .filter((tab) => closing.ids.includes(tab.id) && tab.dirty)
+                .map((tab) => (
+                  <li key={tab.id}>
+                    {tab.menu.id} {tab.menu.title}
+                  </li>
+                ))}
+            </ul>
+          </>
+        )}
       </Modal>
     </div>
   );

@@ -65,7 +65,10 @@ PLAYWRIGHT_BASE_URL=http://localhost:8002 npm run test:e2e
 ```text
 Coverage
 ==========
-ทดสอบ navbar / tabs ที่ state แยกกัน, เปิดเมนูเดิมและ + แล้วไม่สร้างแท็บซ้ำ
+ทดสอบ navbar / tabs ที่ state แยกกัน และเปิดเมนูเดิมแล้วไม่สร้างแท็บซ้ำ
+tests/tabs.spec.ts ตรวจ Close, Close to Left / Right, Close All และยืนยันก่อนปิดกลุ่ม
+ตรวจแท็บที่คลิกขวาไม่ถูกปิดจากคำสั่งซ้าย / ขวา และซ่อน tabbar เมื่อปิดทั้งหมด
+ตรวจหน้าต้อนรับ Company: Demo / User: Demo, คีย์บอร์ด และเมนูไม่ล้น viewport
 New สร้างเอกสารในแท็บเดิมพร้อมยืนยันก่อนทิ้งการแก้ไข
 lookup, การคำนวณยอดและภาษี
 lookup ประเภทการขาย 4 แถว, เลือกด้วยเมาส์ / คีย์บอร์ด และบันทึกหลัง reload

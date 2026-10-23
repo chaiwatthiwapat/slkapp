@@ -2,6 +2,17 @@ import { expect, test, type Page } from '@playwright/test';
 
 const panel = (page: Page) => page.locator('.workspace-panel:visible');
 
+async function openSaleMenu(page: Page) {
+  await page.getByRole('button', { name: '2. ระบบขายและลูกหนี้', exact: true }).click();
+  await page.getByRole('button', { name: '2.13 ขายสินค้า, บริการ', exact: true }).click();
+}
+async function closeSaleTab(page: Page) {
+  await page
+    .getByRole('tab', { name: '2.13 ขายสินค้า, บริการ', exact: true })
+    .click({ button: 'right' });
+  await page.getByRole('menuitem', { name: 'Close', exact: true }).click();
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
@@ -15,9 +26,7 @@ test('API is reachable through the same frontend origin', async ({ request }) =>
   expect(await missing.json()).toHaveProperty('message');
 });
 
-test('reopening a menu and clicking + reuse its tab and preserve each page state', async ({
-  page,
-}) => {
+test('reopening a menu reuses its tab and preserves each page state', async ({ page }) => {
   await expect(
     panel(page).getByRole('heading', { name: 'ขายสินค้า, บริการ', exact: true }),
   ).toBeVisible();
@@ -54,7 +63,7 @@ test('reopening a menu and clicking + reuse its tab and preserve each page state
     await expect(panel(page).getByLabel('บันทึกส่วนตัวของแท็บนี้')).toHaveValue('quotation state');
   }
 
-  await page.getByRole('button', { name: 'เปิดเมนูขายสินค้า, บริการ', exact: true }).dblclick();
+  await openSaleMenu(page);
   await expect(page.getByRole('tab')).toHaveCount(2);
   await expect(
     page.getByRole('tab', { name: '2.13 ขายสินค้า, บริการ', exact: true }),
@@ -86,7 +95,7 @@ test('New confirms unsaved changes and starts a document in the existing menu ta
     .getByRole('textbox', { name: 'เลขที่เอกสาร', exact: true })
     .inputValue();
   expect(number).toMatch(/^DRAFT-/);
-  await page.getByRole('button', { name: 'เปิดเมนูขายสินค้า, บริการ', exact: true }).dblclick();
+  await openSaleMenu(page);
   await expect(page.getByRole('tab')).toHaveCount(1);
   await expect(panel(page).getByRole('textbox', { name: 'เลขที่เอกสาร', exact: true })).toHaveValue(
     number,
@@ -217,15 +226,15 @@ test('validation and unsaved tab confirmation protect incomplete documents', asy
   await panel(page).getByRole('button', { name: 'Save', exact: true }).click();
   await expect(panel(page).getByRole('alert')).toContainText('กรุณาเลือกลูกค้า');
   await panel(page).getByLabel('เลขที่ใบกำกับภาษี', { exact: true }).fill('unsaved');
-  await page.getByRole('button', { name: 'ปิดแท็บ 1', exact: true }).click();
+  await closeSaleTab(page);
   const dialog = page.getByRole('dialog', { name: 'ปิดแท็บที่ยังไม่ได้บันทึก?', exact: true });
   await expect(dialog).toBeVisible();
   await dialog.getByRole('button', { name: 'กลับไปทำงาน', exact: true }).click();
   await expect(panel(page).getByLabel('เลขที่ใบกำกับภาษี', { exact: true })).toHaveValue('unsaved');
-  await page.getByRole('button', { name: 'ปิดแท็บ 1', exact: true }).click();
+  await closeSaleTab(page);
   await dialog.getByRole('button', { name: 'ปิดและทิ้งการแก้ไข', exact: true }).click();
   await expect(page.getByRole('tab')).toHaveCount(0);
-  await page.getByRole('button', { name: 'เปิดเมนูขายสินค้า, บริการ', exact: true }).click();
+  await openSaleMenu(page);
   await expect(page.getByRole('tab')).toHaveCount(1);
   await expect(panel(page).getByRole('textbox', { name: 'เลขที่เอกสาร', exact: true })).toHaveValue(
     'IV690248',

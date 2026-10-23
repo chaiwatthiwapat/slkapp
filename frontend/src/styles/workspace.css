@@ -115,28 +115,11 @@
 .editor-tab.active > button[role='tab'] > svg {
   color: var(--primary);
 }
-.tab-close {
-  width: 25px;
-  height: 25px;
-  margin-right: 6px;
-  border: 0;
-  background: transparent;
-  border-radius: 4px;
-  color: var(--text-muted);
-}
-.tab-close:hover {
-  color: var(--danger);
-  background: var(--danger-soft);
-}
 .dirty-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--warning);
-}
-.editor-tabs .tab-add {
-  align-self: center;
-  margin-left: 5px;
 }
 .tab-count {
   align-self: center;
@@ -277,4 +260,36 @@
     min-height: 100%;
     height: auto;
   }
+}
+
+.workspace-main.is-empty {
+  padding: 0;
+  background: var(--surface);
+}
+.welcome-page {
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  height: 100%;
+  text-align: center;
+}
+.welcome-page h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+.welcome-details {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.7;
+}
+.welcome-company {
+  color: var(--danger);
+}
+.welcome-user {
+  color: var(--primary);
+}
+.closing-tabs {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  line-height: 1.8;
 }

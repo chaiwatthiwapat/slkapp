@@ -18,6 +18,7 @@ Import จาก frontend/src/components/ui/index.ts
 | Table | Typed columns, sticky header และพื้นที่ scroll |
 | Lookup | Modal + search + table สำหรับเลือกข้อมูล |
 | LookupDropdown | ช่องเลือกพร้อม SVG trigger และตาราง popup ใต้ช่อง |
+| ContextMenu | เมนูคลิกขวาที่วางใน viewport และเลือกได้ด้วยคีย์บอร์ด |
 
 ```text
 Appearance
@@ -117,7 +118,11 @@ Tabs
 ----------
 แต่ละเมนูเปิดได้หนึ่งแท็บ โดยใช้ menu id เป็นเอกลักษณ์ของแท็บ
 คลิกเมนูเดิมจะ focus แท็บเดิมพร้อมข้อมูลที่กำลังแก้ไข ไม่เปิดแท็บซ้ำ
-ปุ่ม + เปิดหรือกลับไปเมนูขายสินค้า, บริการด้วยกติกาเดียวกัน
+เปิดหน้าจาก navbar; tabbar ไม่มีปุ่ม + หรือ x
+คลิกขวาที่แท็บเพื่อใช้ Close, Close to Left, Close to Right หรือ Close All
+Close to Left / Right ปิดเฉพาะแท็บด้านนั้น ไม่รวมแท็บที่คลิก
+คำสั่งด้านที่ไม่มีแท็บจะปิดใช้งาน และการคลิกขวาไม่สลับ active tab
+หาก active tab ถูกปิดจะเลือกแท็บที่เหลือให้เหมาะสม
 ปุ่ม New เริ่มเอกสารใหม่ในแท็บเดิม และยืนยันก่อนทิ้งการแก้ไขที่ยังไม่ได้บันทึก
 แต่ละ SaleAndServicePage ถูก mount แยกด้วย tab id ของเมนู
 แท็บที่ไม่ active ใช้ hidden เพื่อรักษาข้อมูล, scroll และ state ของหน้านั้นไว้
@@ -126,13 +131,23 @@ Keyboard and focus
 ----------
 Tab ใช้ role=tablist / tab / tabpanel และรองรับลูกศรซ้ายขวา, Home, End
 เมนูรองรับลูกศรขึ้นลงและ Escape
+เปิดเมนูคลิกขวาจากแท็บด้วย Shift+F10 หรือปุ่ม Context Menu ได้เช่นกัน
+ContextMenu รองรับ ArrowUp / ArrowDown, Home / End, Enter และ Escape โดยไม่สลับแท็บ
 Modal ใช้ native dialog เพื่อจำกัด focus และคืน focus เมื่อปิด
 
 Unsaved changes
 ----------
 แท็บที่แก้ไขมีจุดแสดงสถานะและเตือนก่อนปิด
+การปิดหลายแท็บจะยืนยันครั้งเดียวก่อนปิดทั้งกลุ่ม หากยกเลิกจะเก็บทุกแท็บและข้อมูลเดิม
+ตรวจเฉพาะข้อมูลในแท็บที่จะปิด จึงไม่เตือนเมื่อแท็บที่แก้ไขเป็นแท็บที่เก็บไว้
 ใช้ beforeunload เพื่อขอให้ browser เตือนก่อนออกจากหน้าเมื่อมีข้อมูลที่ยังไม่ได้บันทึก
 browser เป็นผู้กำหนดการแสดงข้อความเตือน
+
+Empty workspace
+----------
+เมื่อไม่มีแท็บจะซ่อน tabbar และแสดง WelcomePage บนพื้นขาวตรงกลางพื้นที่ทำงาน
+แสดง ยินดีต้อนรับ, Company: Demo และ User: Demo เป็นข้อมูลสาธิต
+เปิดหน้าใหม่จาก navbar แล้ว tabbar จะกลับมาแสดง
 ```
 
 ## Document layout

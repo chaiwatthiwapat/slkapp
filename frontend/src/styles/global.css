@@ -76,21 +76,6 @@ p {
   white-space: nowrap;
   border: 0;
 }
-.empty-workspace {
-  display: grid;
-  place-content: center;
-  gap: 14px;
-  text-align: center;
-  height: 100%;
-  color: var(--text-muted);
-}
-.empty-workspace > svg {
-  margin: auto;
-}
-.empty-workspace h1 {
-  color: var(--text);
-  font-size: 20px;
-}
 .prototype-note {
   display: flex;
   align-items: center;
