@@ -1,0 +1,24 @@
+:root {
+  --primary: #1678bf;
+  --primary-hover: #1167a6;
+  --primary-soft: #edf6fd;
+  --secondary: #64748b;
+  --secondary-soft: #f0f3f7;
+  --success: #16875f;
+  --success-soft: #eaf7ef;
+  --warning: #a36a12;
+  --warning-soft: #fff7e5;
+  --danger: #d84747;
+  --danger-soft: #fff0f0;
+  --neutral: #4e6173;
+  --neutral-soft: #f3f5f7;
+  --text: #24374a;
+  --text-muted: #7a8a9a;
+  --border: #dce5ec;
+  --border-strong: #c6d5e2;
+  --surface: #ffffff;
+  --canvas: #f3f6f9;
+  --radius: 5px;
+  --font: 'Noto Sans Thai', 'Leelawadee UI', Tahoma, system-ui, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+}
