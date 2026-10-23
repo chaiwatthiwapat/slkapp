@@ -42,6 +42,13 @@ export interface Product {
   price: number;
   detail: string;
 }
+export const saleTypes = [
+  { code: '1', name: 'ขายสินค้าเงินสด' },
+  { code: '2', name: 'ขายสินค้าเงินเชื่อ' },
+  { code: '3', name: 'ขายบริการเงินสด' },
+  { code: '4', name: 'ขายบริการเงินเชื่อ' },
+] as const;
+
 export const products: Product[] = [
   {
     code: 'S000002',

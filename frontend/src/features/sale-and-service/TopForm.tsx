@@ -1,5 +1,5 @@
-import { Field, Icon, Input, Select } from '../../components/ui';
-import type { SaleAndServiceDocument } from './model';
+import { Field, Icon, Input, LookupDropdown, Select } from '../../components/ui';
+import { saleTypes, type SaleAndServiceDocument } from './model';
 import { LookupField } from './FormControls';
 
 export type UpdateDocument = <K extends keyof SaleAndServiceDocument>(
@@ -18,13 +18,14 @@ export function TopForm({ document, update, onCustomerLookup, onDocumentLookup }
       <div className="form-top-column">
         <Field label="ประเภทการขาย">
           {(id) => (
-            <Select
+            <LookupDropdown
               id={id}
-              value={document.type}
-              onChange={(event) => update('type', event.target.value)}
-            >
-              <option>ขายบริการเงินสด</option>
-            </Select>
+              label="ประเภทการขาย"
+              height={29}
+              value={saleTypes.find((item) => item.name === document.type)?.code ?? ''}
+              items={saleTypes}
+              onSelect={(item) => update('type', item.name)}
+            />
           )}
         </Field>
         <Field label="เลขที่เอกสาร" required>

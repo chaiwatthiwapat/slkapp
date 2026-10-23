@@ -17,6 +17,7 @@ Import จาก frontend/src/components/ui/index.ts
 | Modal | Native dialog, focus handling, Escape และ backdrop |
 | Table | Typed columns, sticky header และพื้นที่ scroll |
 | Lookup | Modal + search + table สำหรับเลือกข้อมูล |
+| LookupDropdown | ช่องเลือกพร้อม SVG trigger และตาราง popup ใต้ช่อง |
 
 ```text
 Appearance
@@ -56,6 +57,26 @@ Input, Select และ textarea ที่ใช้ ui-input มีขอบค�
 เมื่อ focus ใช้เส้นขอบสีดำจาก --input-focus-border โดยไม่มี outline หรือเงา
 ใช้รูปแบบเดียวกันในฟอร์ม, ตาราง และ lookup
 ปุ่มค้นหาที่ติดกับช่องกรอกใช้ขอบคมเช่นกัน
+```
+
+```text
+Lookup dropdown
+==========
+LookupDropdown ใช้ items, value และ onSelect โดยเก็บค่าที่เลือกเป็น code และแสดง name
+กำหนด width, height, color, backgroundColor, style และ popupWidth ได้
+ใช้ shared Table แสดงคอลัมน์ No และ Description ตามจำนวนข้อมูลจริง ไม่มีแถวว่างเพิ่ม
+กดปุ่ม SVG หรือช่องกรอกเพื่อเปิด เลือกแถวแล้วปิดและคืน focus กลับช่องกรอก
+ใช้ ArrowUp / ArrowDown, Home / End และ Enter เพื่อเลือก; Escape ยกเลิก
+คลิกนอก popup หรือเลื่อน focus ออกจะปิดโดยไม่เปลี่ยนค่า
+
+Document lookup icon
+----------
+ใช้ Icon name="document-lookup" เป็น SVG เอกสารสีขาวพร้อมรายละเอียดสีส้ม
+วาดบนกริด 16×16 ใช้เส้นหนา 1px และสีเข้มเพื่อให้ชัดเมื่อแสดงขนาดจริง
+ปุ่มข้างช่องใช้กรอบเหลี่ยมสีเทาและพื้นขาวตามรูปแบบโปรแกรมอ้างอิง
+ต้นฉบับ vector อยู่ใน components/ui/icons/DocumentLookupArtwork.tsx
+กำหนด width, height และ color ผ่าน Icon ได้
+ปรับสีรายละเอียดผ่าน CSS variables --icon-paper, --icon-fold, --icon-accent, --icon-shadow
 ```
 
 ## Theme

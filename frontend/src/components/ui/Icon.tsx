@@ -1,5 +1,6 @@
 import type { SVGProps } from 'react';
 import { appearance, type Appearance } from './appearance';
+import { DocumentLookupArtwork } from './icons/DocumentLookupArtwork';
 
 const paths = {
   plus: 'M12 5v14M5 12h14',
@@ -24,7 +25,7 @@ const paths = {
   arrow: 'M5 12h14m-6-6 6 6-6 6',
   help: 'M9 8a3 3 0 1 1 5 2c-2 1-2 2-2 3M12 17h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0',
 } as const;
-export type IconName = keyof typeof paths;
+export type IconName = keyof typeof paths | 'document-lookup';
 export interface IconProps
   extends Omit<SVGProps<SVGSVGElement>, 'color' | 'width' | 'height'>, Appearance {
   name: IconName;
@@ -42,7 +43,7 @@ export function Icon({
 }: IconProps) {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox={name === 'document-lookup' ? '0 0 16 16' : '0 0 24 24'}
       fill="none"
       stroke="currentColor"
       strokeWidth="1.7"
@@ -52,7 +53,7 @@ export function Icon({
       style={appearance({ width, height, color, backgroundColor, style })}
       {...props}
     >
-      <path d={paths[name]} />
+      {name === 'document-lookup' ? <DocumentLookupArtwork /> : <path d={paths[name]} />}
     </svg>
   );
 }

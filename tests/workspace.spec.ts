@@ -101,6 +101,64 @@ test('New confirms unsaved changes and starts a document in the existing menu ta
   expect(stored[0].lines[0].quantity).toBe(1);
 });
 
+test('sale type lookup has four rows, supports selection, dismissal and persistence', async ({
+  page,
+}) => {
+  const input = panel(page).getByRole('combobox', { name: 'ประเภทการขาย', exact: true });
+  const trigger = panel(page).getByRole('button', { name: 'เลือกประเภทการขาย', exact: true });
+  const dropdown = page.getByRole('dialog', { name: 'เลือกประเภทการขาย', exact: true });
+  await trigger.click();
+  await expect(dropdown).toBeVisible();
+  await expect(dropdown.locator('tbody tr')).toHaveCount(4);
+  await expect(dropdown.getByRole('columnheader')).toHaveText(['No', 'Description']);
+  await expect(dropdown.getByRole('button')).toHaveText([
+    'ขายสินค้าเงินสด',
+    'ขายสินค้าเงินเชื่อ',
+    'ขายบริการเงินสด',
+    'ขายบริการเงินเชื่อ',
+  ]);
+  await dropdown.getByRole('button', { name: 'ขายสินค้าเงินสด', exact: true }).click();
+  await expect(input).toHaveValue('ขายสินค้าเงินสด');
+  await expect(dropdown).not.toBeVisible();
+  await expect(input).toBeFocused();
+
+  await input.press('ArrowDown');
+  await expect(
+    dropdown.getByRole('button', { name: 'ขายสินค้าเงินสด', exact: true }),
+  ).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(input).toHaveValue('ขายสินค้าเงินเชื่อ');
+
+  await input.press('Enter');
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await expect(input).toHaveValue('ขายบริการเงินเชื่อ');
+  await input.press('ArrowDown');
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Escape');
+  await expect(dropdown).not.toBeVisible();
+  await expect(input).toHaveValue('ขายบริการเงินเชื่อ');
+  await expect(input).toBeFocused();
+
+  await trigger.click();
+  await panel(page).getByRole('heading', { name: 'ขายสินค้า, บริการ', exact: true }).click();
+  await expect(dropdown).not.toBeVisible();
+  await expect(input).toHaveValue('ขายบริการเงินเชื่อ');
+  await trigger.click();
+  await dropdown.locator('tbody tr').nth(2).locator('td').first().click();
+  await expect(input).toHaveValue('ขายบริการเงินสด');
+
+  await trigger.click();
+  await dropdown.getByRole('button', { name: 'ขายสินค้าเงินเชื่อ', exact: true }).click();
+  await panel(page).getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(panel(page).getByRole('status', { name: 'สถานะการบันทึก' })).toBeVisible();
+  await page.reload();
+  await expect(
+    panel(page).getByRole('combobox', { name: 'ประเภทการขาย', exact: true }),
+  ).toHaveValue('ขายสินค้าเงินเชื่อ');
+});
+
 test('customer and product lookup fill fields and totals update', async ({ page }) => {
   await panel(page).getByRole('button', { name: 'ค้นหาลูกค้า', exact: true }).click();
   const customer = page.getByRole('dialog', { name: 'ค้นหาลูกค้า', exact: true });
