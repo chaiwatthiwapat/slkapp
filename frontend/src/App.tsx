@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Button, Icon, Input, Modal } from './components/ui';
 import { Navbar } from './features/workspace/Navbar';
-import { salesMenu, type MenuItem } from './features/workspace/menu';
-import { createDocument, type SalesDocument } from './features/sales/model';
-import { readDocuments } from './features/sales/storage';
-import { SalesPage } from './features/sales/SalesPage';
+import { saleAndServiceMenu, type MenuItem } from './features/workspace/menu';
+import { createDocument, type SaleAndServiceDocument } from './features/sale-and-service/model';
+import { readDocuments } from './features/sale-and-service/storage';
+import { SaleAndServicePage } from './features/sale-and-service/SaleAndServicePage';
 
 interface Tab {
   id: string;
   menu: MenuItem;
-  document?: SalesDocument;
+  document?: SaleAndServiceDocument;
   dirty: boolean;
 }
-const firstId = 'workspace-initial';
+const firstId = `menu-${saleAndServiceMenu.id}`;
 function PlannedPage({ menu }: { menu: MenuItem }) {
   const [note, setNote] = useState('');
   return (
@@ -24,7 +24,7 @@ function PlannedPage({ menu }: { menu: MenuItem }) {
         <span className="eyebrow">เมนู {menu.id}</span>
         <h1>{menu.title}</h1>
         <p>พื้นที่สำหรับพัฒนาหน้านี้ในขั้นถัดไป</p>
-        <p className="muted">เริ่มใช้งานหน้าขายบริการเงินสดได้จากเมนู 2.13</p>
+        <p className="muted">เริ่มใช้งานหน้าขายสินค้า, บริการได้จากเมนู 2.13</p>
         <label htmlFor={`memo-${menu.id}`}>บันทึกส่วนตัวของแท็บนี้</label>
         <Input
           id={`memo-${menu.id}`}
@@ -41,7 +41,7 @@ export function App() {
   const [tabs, setTabs] = useState<Tab[]>(() => [
     {
       id: firstId,
-      menu: salesMenu,
+      menu: saleAndServiceMenu,
       document: readDocuments()[0] ?? createDocument(),
       dirty: false,
     },
@@ -76,27 +76,24 @@ export function App() {
     window.addEventListener('beforeunload', beforeUnload);
     return () => window.removeEventListener('beforeunload', beforeUnload);
   }, [tabs]);
-  function openMenu(menu: MenuItem, fresh = false) {
-    const existing = tabs.find((tab) => tab.menu.id === menu.id);
-    if (existing && !fresh) {
-      setActiveId(existing.id);
-      return;
-    }
-    const id = crypto.randomUUID();
-    setTabs((current) => [
-      ...current,
-      {
-        id,
-        menu,
-        dirty: false,
-        document:
-          menu.kind === 'sales'
-            ? fresh
-              ? createDocument()
-              : (readDocuments()[0] ?? createDocument())
-            : undefined,
-      },
-    ]);
+  function openMenu(menu: MenuItem) {
+    const id = `menu-${menu.id}`;
+    setTabs((current) =>
+      current.some((tab) => tab.menu.id === menu.id)
+        ? current
+        : [
+            ...current,
+            {
+              id,
+              menu,
+              dirty: false,
+              document:
+                menu.kind === 'sale-and-service'
+                  ? (readDocuments()[0] ?? createDocument())
+                  : undefined,
+            },
+          ],
+    );
     setActiveId(id);
   }
   function removeTab(id: string) {
@@ -151,10 +148,9 @@ export function App() {
               tabIndex={activeId === tab.id ? 0 : -1}
               onClick={() => setActiveId(tab.id)}
             >
-              <Icon name={tab.menu.kind === 'sales' ? 'file' : 'grid'} size={14} />
+              <Icon name={tab.menu.kind === 'sale-and-service' ? 'file' : 'grid'} size={14} />
               <span>
                 {tab.menu.id} {tab.menu.title}
-                {index > 0 && tab.menu.kind === 'sales' ? ` (${index + 1})` : ''}
               </span>
               {tab.dirty && (
                 <span className="dirty-dot" title="ยังไม่ได้บันทึก" aria-hidden="true" />
@@ -173,9 +169,9 @@ export function App() {
           className="tab-add"
           variant="ghost"
           tone="neutral"
-          aria-label="เปิดเอกสารใหม่"
-          title="เปิดเอกสารขายบริการใหม่"
-          onClick={() => openMenu(salesMenu, true)}
+          aria-label="เปิดเมนูขายสินค้า, บริการ"
+          title="เปิดหรือกลับไปเมนูขายสินค้า, บริการ"
+          onClick={() => openMenu(saleAndServiceMenu)}
         >
           <Icon name="plus" />
         </Button>
@@ -187,8 +183,8 @@ export function App() {
             <Icon name="grid" size={40} />
             <h1>พื้นที่ทำงานของคุณ</h1>
             <p>เลือกเมนูด้านบนเพื่อเริ่มทำงาน</p>
-            <Button variant="solid" onClick={() => openMenu(salesMenu)}>
-              เปิดขายบริการเงินสด
+            <Button variant="solid" onClick={() => openMenu(saleAndServiceMenu)}>
+              เปิดขายสินค้า, บริการ
               <Icon name="arrow" />
             </Button>
           </div>
@@ -202,13 +198,12 @@ export function App() {
             hidden={activeId !== tab.id}
             className="workspace-panel"
           >
-            {tab.menu.kind === 'sales' ? (
-              <SalesPage
+            {tab.menu.kind === 'sale-and-service' ? (
+              <SaleAndServicePage
                 tabId={tab.id}
                 initialDocument={tab.document!}
                 active={activeId === tab.id}
                 onDirtyChange={(dirty) => setDirty(tab.id, dirty)}
-                onNew={() => openMenu(salesMenu, true)}
                 onClose={(discard) => (discard ? removeTab(tab.id) : requestClose(tab))}
               />
             ) : (
@@ -259,8 +254,8 @@ export function App() {
         width={540}
       >
         <p>
-          เลือกเมนูระบบงานเพื่อเปิดแท็บ แต่ละแท็บเก็บข้อมูลแยกกัน กด New หรือเครื่องหมาย +
-          เพื่อเปิดเอกสารขายบริการอีกชุด
+          แต่ละเมนูเปิดได้หนึ่งแท็บ การเลือกเมนูเดิมจะกลับไปแท็บที่เปิดอยู่พร้อมข้อมูลเดิม กด New
+          เพื่อเริ่มเอกสารใหม่ในแท็บเดิม หรือเครื่องหมาย + เพื่อเปิดหรือกลับไปเมนูขายสินค้า, บริการ
         </p>
         <p>
           เมนู 2.13 เป็นหน้าต้นแบบที่แก้ไขรายการ คำนวณยอด เลือกข้อมูล และบันทึกใน browser ได้

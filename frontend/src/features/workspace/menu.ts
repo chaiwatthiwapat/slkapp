@@ -1,8 +1,9 @@
 import type { IconName } from '../../components/ui';
 export interface MenuItem {
   id: string;
+  nameEn?: string;
   title: string;
-  kind: 'sales' | 'planned';
+  kind: 'sale-and-service' | 'planned';
 }
 export interface MenuGroup {
   id: string;
@@ -31,7 +32,12 @@ export const menuGroups: MenuGroup[] = [
       { id: '2.2', title: 'ใบเสนอราคา', kind: 'planned' },
       { id: '2.3', title: 'ใบสั่งขาย', kind: 'planned' },
       { id: '2.12', title: 'ขายสินค้าเงินสด', kind: 'planned' },
-      { id: '2.13', title: 'ขายบริการเงินสด', kind: 'sales' },
+      {
+        id: '2.13',
+        nameEn: 'sale-and-service',
+        title: 'ขายสินค้า, บริการ',
+        kind: 'sale-and-service',
+      },
       { id: '2.14', title: 'ขายบริการเงินเชื่อ', kind: 'planned' },
     ],
   },
@@ -46,4 +52,4 @@ export const menuGroups: MenuGroup[] = [
     ],
   },
 ];
-export const salesMenu = menuGroups[1].items.find((item) => item.id === '2.13')!;
+export const saleAndServiceMenu = menuGroups[1].items.find((item) => item.id === '2.13')!;

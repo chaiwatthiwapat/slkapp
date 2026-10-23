@@ -9,7 +9,7 @@ slkapp/
   frontend/                 React + TypeScript + Vite
     src/components/ui/      Shared UI และ SVG icon
     src/features/workspace/ Navbar และ menu registry
-    src/features/sales/     หน้า 2.13 และ domain model
+    src/features/sale-and-service/  เมนู 2.13 ขายสินค้า, บริการ
     src/styles/             Theme และ application layout
   backend/src/              Express + TypeScript API
   docker/                   Dockerfiles และ Nginx configuration
@@ -23,6 +23,29 @@ Workspaces
 ใช้ npm workspaces และ package-lock.json เดียวที่ root
 เพื่อให้ npm ci ได้ dependency ชุดเดียวกัน
 ```
+
+## Feature naming
+
+| เมนู | English name | ชื่อไทย | Source |
+|---|---|---|---|
+| 2.13 | sale-and-service | ขายสินค้า, บริการ | frontend/src/features/sale-and-service/ |
+
+```text
+Entry points
+==========
+SaleAndServicePage.tsx คือ component หลักของเมนู 2.13
+sale-and-service.css คือ stylesheet ของหน้า
+model.ts เก็บ SaleAndServiceDocument และ SaleAndServiceLine
+storage.ts จัดการข้อมูลเอกสารใน browser
+menu.ts ใน features/workspace/ กำหนด nameEn และชื่อแสดงผลของเมนู
+
+Tabs
+----------
+เมนูเดียวเปิดได้หนึ่งแท็บ เลือกเมนูเดิมหรือกด + จะกลับไปแท็บเดิม
+New เริ่มเอกสารใหม่ในแท็บเดิม และยืนยันก่อนทิ้งข้อมูลที่ยังไม่ได้บันทึก
+```
+
+เอกสารประจำเมนู: [Sale and service](sale-and-service.md)
 
 ## Runtime
 
@@ -68,12 +91,13 @@ backend นี้มีไว้ตรวจการเชื่อมต่อ
 }
 ```
 
-## Sales storage
+## Sale and service storage
 
 ```text
 Persistence
 ==========
-UI ใช้ localStorage key slkapp.sales.v1 ผ่าน features/sales/storage.ts
+UI ใช้ localStorage key slkapp.sales.v1 ผ่าน features/sale-and-service/storage.ts
+คง storage key เดิมไว้เพื่อให้เอกสารที่บันทึกก่อนเปลี่ยนชื่อยังเปิดใช้งานได้
 บันทึกเมื่อกด Save หรือ Ctrl+S / Cmd+S เท่านั้น
 ไม่ autosave และไม่ส่งข้อมูลเอกสารไป backend
 

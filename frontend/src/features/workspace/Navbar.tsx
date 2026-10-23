@@ -88,7 +88,9 @@ export function Navbar({ onOpen, activeMenu }: Props) {
                   >
                     <span className="menu-code mono">{item.id}</span>
                     <span>{item.title}</span>
-                    {item.kind === 'sales' && <span className="menu-ready">พร้อมใช้งาน</span>}
+                    {item.kind === 'sale-and-service' && (
+                      <span className="menu-ready">พร้อมใช้งาน</span>
+                    )}
                   </button>
                 ))}
               </div>

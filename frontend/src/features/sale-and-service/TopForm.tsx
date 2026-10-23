@@ -1,13 +1,13 @@
 import { Field, Icon, Input, Select } from '../../components/ui';
-import type { SalesDocument } from './model';
+import type { SaleAndServiceDocument } from './model';
 import { LookupField } from './FormControls';
 
-export type UpdateDocument = <K extends keyof SalesDocument>(
+export type UpdateDocument = <K extends keyof SaleAndServiceDocument>(
   key: K,
-  value: SalesDocument[K],
+  value: SaleAndServiceDocument[K],
 ) => void;
 interface Props {
-  document: SalesDocument;
+  document: SaleAndServiceDocument;
   update: UpdateDocument;
   onCustomerLookup: () => void;
   onDocumentLookup: () => void;
@@ -57,7 +57,7 @@ export function TopForm({ document, update, onCustomerLookup, onDocumentLookup }
               id={id}
               value={document.taxType}
               onChange={(event) =>
-                update('taxType', event.target.value as SalesDocument['taxType'])
+                update('taxType', event.target.value as SaleAndServiceDocument['taxType'])
               }
             >
               <option value="exclusive">ภาษีแยกนอก</option>

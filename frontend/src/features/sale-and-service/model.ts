@@ -1,4 +1,4 @@
-export interface SalesLine {
+export interface SaleAndServiceLine {
   id: string;
   code: string;
   name: string;
@@ -9,7 +9,7 @@ export interface SalesLine {
   price: number;
   discount: number;
 }
-export interface SalesDocument {
+export interface SaleAndServiceDocument {
   id: string;
   number: string;
   type: string;
@@ -33,7 +33,7 @@ export interface SalesDocument {
   shipping: number;
   discount: number;
   note: string;
-  lines: SalesLine[];
+  lines: SaleAndServiceLine[];
 }
 export interface Product {
   code: string;
@@ -78,7 +78,7 @@ export const customers = [
   },
   { code: 'CASH', name: 'ลูกค้าทั่วไป', detail: 'ลูกค้าเงินสด' },
 ];
-export function blankLine(): SalesLine {
+export function blankLine(): SaleAndServiceLine {
   return {
     id: crypto.randomUUID(),
     code: '',
@@ -91,7 +91,7 @@ export function blankLine(): SalesLine {
     discount: 0,
   };
 }
-export function createDocument(sample = false): SalesDocument {
+export function createDocument(sample = false): SaleAndServiceDocument {
   const lines = Array.from({ length: 25 }, blankLine);
   if (sample) lines[0] = { ...lines[0], ...products[0], quantity: 1 };
   const today = new Date();
@@ -123,13 +123,13 @@ export function createDocument(sample = false): SalesDocument {
     lines,
   };
 }
-export const isActiveLine = (line: SalesLine) =>
+export const isActiveLine = (line: SaleAndServiceLine) =>
   Boolean(line.code || line.name || line.quantity || line.price || line.discount);
 const cents = (value: number) => Math.round(value * 100);
-export function lineTotal(line: SalesLine): number {
+export function lineTotal(line: SaleAndServiceLine): number {
   return Math.max(0, Math.round(line.quantity * cents(line.price)) - cents(line.discount)) / 100;
 }
-export function calculateTotals(document: SalesDocument) {
+export function calculateTotals(document: SaleAndServiceDocument) {
   const subtotal = document.lines.reduce((sum, line) => sum + cents(lineTotal(line)), 0);
   const afterDiscount = Math.max(0, subtotal - cents(document.discount));
   const base =
@@ -153,7 +153,7 @@ export const money = (value: number) =>
   new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
     value,
   );
-export function validateDocument(document: SalesDocument): string | null {
+export function validateDocument(document: SaleAndServiceDocument): string | null {
   if (!document.number.trim()) return 'กรุณาระบุเลขที่เอกสาร';
   if (!document.date) return 'กรุณาระบุวันที่ออกเอกสาร';
   if (!document.customerCode.trim() || !document.customerName.trim()) return 'กรุณาเลือกลูกค้า';

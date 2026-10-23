@@ -13,7 +13,7 @@ Overview
 |---|---|
 | [Architecture](architecture.md) | โครงสร้าง repo, Docker, API และขอบเขต backend |
 | [UI guide](ui-guide.md) | Shared UI, theme, navbar, tabs และ layout |
-| [Sales UI](sales-ui.md) | หน้า 2.13, ข้อมูลสาธิต, การคำนวณ และข้อจำกัด |
+| [Sale and service](sale-and-service.md) | หน้า 2.13, ข้อมูลสาธิต, การคำนวณ และข้อจำกัด |
 | [Development](development.md) | คำสั่งพัฒนาและการตรวจสอบ |
 | [Docs format guide](docs-format-guide.md) | รูปแบบเอกสารที่คัดลอกจาก zdotfiles |
 
@@ -42,6 +42,7 @@ Implementation
 Workspace
 ----------
 เก็บ state ของแต่ละหน้าแยกตาม tab id; การสลับแท็บต้องไม่ล้างฟอร์มหรือรายการ
+แต่ละเมนูเปิดได้หนึ่งแท็บ การเปิดเมนูเดิมต้องกลับไปแท็บเดิมและคงข้อมูลที่กำลังแก้ไข
 คงชื่อส่วนของหน้าเอกสารเป็น button-action, form-top, form-table, form-bottom
 
 Data and authorization

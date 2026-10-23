@@ -1,9 +1,9 @@
 import { Button, Icon, Input, Table, type Column } from '../../components/ui';
-import { isActiveLine, lineTotal, money, type SalesLine } from './model';
+import { isActiveLine, lineTotal, money, type SaleAndServiceLine } from './model';
 
 interface Props {
-  lines: SalesLine[];
-  onUpdate: (id: string, key: keyof SalesLine, value: string | number) => void;
+  lines: SaleAndServiceLine[];
+  onUpdate: (id: string, key: keyof SaleAndServiceLine, value: string | number) => void;
   onProductLookup: (id: string) => void;
   onAdd: () => void;
   onRemove: (id: string) => void;
@@ -11,7 +11,7 @@ interface Props {
 export function LinesTable({ lines, onUpdate, onProductLookup, onAdd, onRemove }: Props) {
   const text =
     (key: 'name' | 'warehouse' | 'location' | 'unit', label: string) =>
-    (row: SalesLine, index: number) => (
+    (row: SaleAndServiceLine, index: number) => (
       <Input
         className="cell-input"
         aria-label={`${label} แถว ${index + 1}`}
@@ -20,7 +20,8 @@ export function LinesTable({ lines, onUpdate, onProductLookup, onAdd, onRemove }
       />
     );
   const number =
-    (key: 'quantity' | 'price' | 'discount', label: string) => (row: SalesLine, index: number) => (
+    (key: 'quantity' | 'price' | 'discount', label: string) =>
+    (row: SaleAndServiceLine, index: number) => (
       <Input
         type="number"
         min="0"
@@ -31,7 +32,7 @@ export function LinesTable({ lines, onUpdate, onProductLookup, onAdd, onRemove }
         onChange={(event) => onUpdate(row.id, key, Number(event.target.value))}
       />
     );
-  const columns: Column<SalesLine>[] = [
+  const columns: Column<SaleAndServiceLine>[] = [
     {
       key: 'no',
       title: 'No.',

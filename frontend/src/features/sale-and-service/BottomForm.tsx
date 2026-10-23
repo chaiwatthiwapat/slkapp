@@ -1,11 +1,11 @@
 import { Field, Icon, Input } from '../../components/ui';
-import { calculateTotals, money, type SalesDocument } from './model';
+import { calculateTotals, money, type SaleAndServiceDocument } from './model';
 import { LookupField } from './FormControls';
 import type { UpdateDocument } from './TopForm';
 
 export type MasterLookup = 'deliveryTerm' | 'bookCode' | 'department' | 'contact' | 'salesperson';
 interface Props {
-  document: SalesDocument;
+  document: SaleAndServiceDocument;
   update: UpdateDocument;
   onLookup: (field: MasterLookup) => void;
 }

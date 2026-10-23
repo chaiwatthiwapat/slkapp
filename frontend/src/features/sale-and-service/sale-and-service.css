@@ -1,4 +1,4 @@
-.sales-page {
+.sale-and-service-page {
   height: 100%;
   min-height: 0;
   display: flex;
@@ -513,12 +513,12 @@
   .workspace-main {
     overflow: auto;
   }
-  .sales-page {
+  .sale-and-service-page {
     min-height: 670px;
   }
 }
 @media (max-width: 760px) {
-  .sales-page {
+  .sale-and-service-page {
     height: auto;
     min-height: 100%;
     padding-bottom: 8px;
@@ -630,7 +630,7 @@
   .app-shell,
   .workspace-main,
   .workspace-panel,
-  .sales-page {
+  .sale-and-service-page {
     height: auto;
     min-height: 0;
     overflow: visible;

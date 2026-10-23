@@ -11,26 +11,27 @@ import {
 import {
   blankLine,
   calculateTotals,
+  createDocument,
   customers,
   isActiveLine,
   money,
   products,
   validateDocument,
   type Product,
-  type SalesDocument,
-  type SalesLine,
+  type SaleAndServiceDocument,
+  type SaleAndServiceLine,
 } from './model';
 import { deleteDocument, readDocuments, saveDocument } from './storage';
 import { TopForm, type UpdateDocument } from './TopForm';
 import { LinesTable } from './LinesTable';
 import { BottomForm, type MasterLookup } from './BottomForm';
+import { saleAndServiceMenu } from '../workspace/menu';
 
 interface Props {
   tabId: string;
-  initialDocument: SalesDocument;
+  initialDocument: SaleAndServiceDocument;
   active: boolean;
   onDirtyChange: (dirty: boolean) => void;
-  onNew: () => void;
   onClose: (discard?: boolean) => void;
 }
 type Preview = 'ACC' | 'TAX' | 'Detail' | 'FIN';
@@ -71,12 +72,11 @@ const masterData: Record<MasterLookup, { title: string; items: LookupItem[] }> =
     ],
   },
 };
-export function SalesPage({
+export function SaleAndServicePage({
   tabId,
   initialDocument,
   active,
   onDirtyChange,
-  onNew,
   onClose,
 }: Props) {
   const [document, setDocument] = useState(initialDocument);
@@ -87,7 +87,7 @@ export function SalesPage({
   const [productRow, setProductRow] = useState<string | null>(null);
   const [master, setMaster] = useState<MasterLookup | null>(null);
   const [documentLookup, setDocumentLookup] = useState(false);
-  const [pendingDocument, setPendingDocument] = useState<SalesDocument | null>(null);
+  const [pendingDocument, setPendingDocument] = useState<SaleAndServiceDocument | null>(null);
   const [preview, setPreview] = useState<Preview | null>(null);
   const [deleting, setDeleting] = useState(false);
   const dirty = JSON.stringify(document) !== baseline;
@@ -144,7 +144,7 @@ export function SalesPage({
     window.addEventListener('keydown', shortcut);
     return () => window.removeEventListener('keydown', shortcut);
   });
-  function updateLine(id: string, key: keyof SalesLine, value: string | number) {
+  function updateLine(id: string, key: keyof SaleAndServiceLine, value: string | number) {
     update(
       'lines',
       document.lines.map((line) => (line.id === id ? { ...line, [key]: value } : line)),
@@ -167,14 +167,14 @@ export function SalesPage({
       ),
     );
   }
-  function load(next: SalesDocument) {
+  function load(next: SaleAndServiceDocument) {
     if (dirty) {
       setPendingDocument(next);
       return;
     }
     applyDocument(next);
   }
-  function applyDocument(next: SalesDocument) {
+  function applyDocument(next: SaleAndServiceDocument) {
     setDocument(next);
     setBaseline(JSON.stringify(next));
     setPendingDocument(null);
@@ -198,7 +198,7 @@ export function SalesPage({
     document: item,
   }));
   return (
-    <article className="sales-page">
+    <article className="sale-and-service-page" data-page={saleAndServiceMenu.nameEn}>
       <div className="page-heading">
         <div>
           <div className="breadcrumb">
@@ -210,7 +210,7 @@ export function SalesPage({
             <span className="title-icon">
               <Icon name="file" size={20} />
             </span>
-            <h1>ขายบริการเงินสด</h1>
+            <h1>{saleAndServiceMenu.title}</h1>
             <span className={`document-state ${dirty ? 'is-dirty' : ''}`}>
               <span />
               {dirty ? 'ยังไม่ได้บันทึก' : 'ไม่มีการแก้ไข'}
@@ -219,7 +219,7 @@ export function SalesPage({
         </div>
         <div className="heading-meta">
           <span className="document-reference mono">{document.number}</span>
-          <span>ใบขายบริการ / Cash service invoice</span>
+          <span>ขายสินค้า, บริการ / Sale and service</span>
         </div>
       </div>
       <div className="button-action" aria-label="คำสั่งเอกสาร">
@@ -228,7 +228,7 @@ export function SalesPage({
             <Icon name="left" />
             Back
           </Button>
-          <Button onClick={onNew}>
+          <Button onClick={() => load(createDocument())}>
             <Icon name="plus" />
             New
           </Button>
@@ -458,7 +458,7 @@ export function SalesPage({
     </article>
   );
 }
-function AccountingPreview({ document }: { document: SalesDocument }) {
+function AccountingPreview({ document }: { document: SaleAndServiceDocument }) {
   const totals = calculateTotals(document);
   const rows = [
     { name: 'เงินสด', debit: totals.total, credit: 0 },

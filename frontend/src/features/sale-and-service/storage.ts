@@ -1,7 +1,8 @@
-import { createDocument, type SalesDocument } from './model';
+import { createDocument, type SaleAndServiceDocument } from './model';
 
+// Preserve the existing storage key so renaming the feature retains saved documents.
 const key = 'slkapp.sales.v1';
-function isDocument(value: unknown): value is SalesDocument {
+function isDocument(value: unknown): value is SaleAndServiceDocument {
   if (!value || typeof value !== 'object') return false;
   const template = createDocument();
   const candidate = value as Record<string, unknown>;
@@ -30,7 +31,7 @@ function isDocument(value: unknown): value is SalesDocument {
     }) && ['exclusive', 'inclusive', 'exempt'].includes(String(candidate.taxType))
   );
 }
-export function readDocuments(): SalesDocument[] {
+export function readDocuments(): SaleAndServiceDocument[] {
   try {
     const raw: unknown = JSON.parse(localStorage.getItem(key) ?? 'null');
     return Array.isArray(raw) ? raw.filter(isDocument) : [createDocument(true)];
@@ -38,7 +39,7 @@ export function readDocuments(): SalesDocument[] {
     return [createDocument(true)];
   }
 }
-export function saveDocument(document: SalesDocument): void {
+export function saveDocument(document: SaleAndServiceDocument): void {
   const existing = readDocuments();
   const other = existing.filter((item) => item.id !== document.id);
   if (other.some((item) => item.number === document.number))

@@ -65,7 +65,9 @@ PLAYWRIGHT_BASE_URL=http://localhost:8002 npm run test:e2e
 ```text
 Coverage
 ==========
-ทดสอบ navbar / tabs ที่ state แยกกัน, lookup, การคำนวณยอดและภาษี
+ทดสอบ navbar / tabs ที่ state แยกกัน, เปิดเมนูเดิมและ + แล้วไม่สร้างแท็บซ้ำ
+New สร้างเอกสารในแท็บเดิมพร้อมยืนยันก่อนทิ้งการแก้ไข
+lookup, การคำนวณยอดและภาษี
 save / reload, validation, ปิดแท็บที่มีการแก้ไข, delete
 พื้นที่ตาราง, mobile layout และ API health
 
@@ -106,4 +108,4 @@ Save ไม่สำเร็จ: ตรวจข้อความ validation �
 ข้อมูลไม่ปรากฏใน browser อื่น: ขณะนี้ข้อมูลจัดเก็บเฉพาะ browser เดิม
 ```
 
-รายละเอียดการจัดเก็บข้อมูล: [Sales UI](sales-ui.md)
+รายละเอียดการจัดเก็บข้อมูล: [Sale and service](sale-and-service.md)
