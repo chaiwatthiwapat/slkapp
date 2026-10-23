@@ -49,6 +49,15 @@ Field ใช้ render prop เพื่อเชื่อม label กับ in
 </Field>
 ```
 
+```text
+Input style
+==========
+Input, Select และ textarea ที่ใช้ ui-input มีขอบคม ไม่ rounded
+เมื่อ focus ใช้เส้นขอบสีดำจาก --input-focus-border โดยไม่มี outline หรือเงา
+ใช้รูปแบบเดียวกันในฟอร์ม, ตาราง และ lookup
+ปุ่มค้นหาที่ติดกับช่องกรอกใช้ขอบคมเช่นกัน
+```
+
 ## Theme
 
 ```text
