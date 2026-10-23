@@ -13,6 +13,7 @@
   --neutral: #4e6173;
   --neutral-soft: #f3f5f7;
   --text: #24374a;
+  --menu-text: #000000;
   --text-muted: #7a8a9a;
   --border: #dce5ec;
   --border-strong: #c6d5e2;
@@ -20,6 +21,7 @@
   --surface: #ffffff;
   --canvas: #f3f6f9;
   --radius: 5px;
+  --workspace-bar-height: 39px;
   --font: 'Noto Sans Thai', 'Leelawadee UI', Tahoma, system-ui, sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }

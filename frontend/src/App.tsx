@@ -48,12 +48,9 @@ export function App() {
   ]);
   const [activeId, setActiveId] = useState<string | null>(firstId);
   const [closing, setClosing] = useState<Tab | null>(null);
-  const [help, setHelp] = useState(false);
   const [api, setApi] = useState<'checking' | 'online' | 'offline'>('checking');
   const active = tabs.find((tab) => tab.id === activeId);
   useEffect(() => {
-    const showHelp = () => setHelp(true);
-    window.addEventListener('slkapp:help', showHelp);
     const controller = new AbortController();
     void fetch('/api/health', { signal: controller.signal })
       .then((response) => (response.ok ? response.json() : Promise.reject()))
@@ -62,7 +59,6 @@ export function App() {
         if (!controller.signal.aborted) setApi('offline');
       });
     return () => {
-      window.removeEventListener('slkapp:help', showHelp);
       controller.abort();
     };
   }, []);
@@ -246,22 +242,6 @@ export function App() {
         }
       >
         <p>มีการแก้ไขในแท็บนี้ที่ยังไม่ได้บันทึก กรุณาบันทึกก่อนปิดหากต้องการเก็บข้อมูล</p>
-      </Modal>
-      <Modal
-        open={help}
-        title="ยินดีต้อนรับสู่ SLK Workspace"
-        onClose={() => setHelp(false)}
-        width={540}
-      >
-        <p>
-          แต่ละเมนูเปิดได้หนึ่งแท็บ การเลือกเมนูเดิมจะกลับไปแท็บที่เปิดอยู่พร้อมข้อมูลเดิม กด New
-          เพื่อเริ่มเอกสารใหม่ในแท็บเดิม หรือเครื่องหมาย + เพื่อเปิดหรือกลับไปเมนูขายสินค้า, บริการ
-        </p>
-        <p>
-          เมนู 2.13 เป็นหน้าต้นแบบที่แก้ไขรายการ คำนวณยอด เลือกข้อมูล และบันทึกใน browser ได้
-          เมนูอื่นเตรียมพื้นที่สำหรับพัฒนาต่อ
-        </p>
-        <p className="muted">ข้อมูลยังไม่ถูกบันทึกลง backend และอาจหายได้เมื่อล้างข้อมูล browser</p>
       </Modal>
     </div>
   );

@@ -82,6 +82,15 @@ Document lookup icon
 ## Theme
 
 ```text
+Cursor
+==========
+ใช้ cursor: default (ลูกศรปกติ) ทั่วทั้งแอป รวมปุ่ม, ลิงก์, input, select, textarea และตาราง
+ครอบคลุม hover, focus, disabled, popup, backdrop และจุดปรับขนาด textarea
+ไม่เปลี่ยนเป็น pointer, text, not-allowed หรือ cursor อื่น เว้นแต่ผู้ใช้สั่งเพิ่มโดยตรง
+กำหนดกติกากลางใน styles/global.css และไม่เพิ่ม cursor override ใน component โดยพลการ
+```
+
+```text
 Tokens
 ==========
 กำหนดสีใน src/styles/tokens.css ได้แก่ primary, secondary, success, warning, danger, neutral
@@ -95,6 +104,13 @@ Tokens
 Navbar
 ==========
 Navbar หลักเรียงแนวนอน 3 ระบบ โดย menu registry อยู่ใน features/workspace/menu.ts
+แสดงเป็นข้อความปกติ 1. ระบบซื้อและเจ้าหนี้, 2. ระบบขายและลูกหนี้, 3. ระบบการเงินและธนาคาร
+navbar และ tabbar สูงเท่ากัน 39px ผ่าน --workspace-bar-height
+navbar มีเฉพาะเมนู ไม่มี logo, profile, badge, ปุ่มช่วยเหลือ หรือไอคอนประกอบ
+ข้อความ navbar ทุกสถานะ และข้อความปกติใน dropdown รวมเลขเมนูใช้สีดำ #000000 ผ่าน --menu-text
+กรอบ dropdown ใช้ padding 8px เท่ากันทุกด้าน รวมด้านบนสุดและล่างสุด
+แต่ละรายการใช้ padding บน–ล่าง 4px และซ้าย–ขวา 8px โดยแถวสูงตามข้อความ
+เฉพาะรายการใน dropdown ที่ hover เปลี่ยนสีข้อความเป็น primary โดยไม่เติมสีพื้นหลัง
 รายการเป็นตัวอย่างเบื้องต้น เพิ่มเมนูได้จากข้อมูลชุดนี้
 
 Tabs

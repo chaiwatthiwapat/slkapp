@@ -257,7 +257,6 @@
 .ui-lookup-dropdown > .ui-input {
   flex: 1;
   width: 0;
-  cursor: pointer;
 }
 .ui-lookup-dropdown > .ui-input[readonly] {
   background: var(--surface);
@@ -305,9 +304,6 @@
 .lookup-dropdown-table .ui-table td {
   height: 27px;
   padding: 0;
-}
-.lookup-dropdown-table .ui-table tbody tr {
-  cursor: pointer;
 }
 .lookup-dropdown-table .ui-table tbody tr:nth-child(odd) {
   background: var(--primary-soft);

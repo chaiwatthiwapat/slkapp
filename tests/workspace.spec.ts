@@ -29,15 +29,13 @@ test('reopening a menu and clicking + reuse its tab and preserve each page state
       node.scrollTop = 180;
     });
 
-  await page.getByRole('button', { name: '2 ระบบขายและลูกหนี้', exact: true }).click();
+  await page.getByRole('button', { name: '2. ระบบขายและลูกหนี้', exact: true }).click();
   await page.getByRole('button', { name: '2.2 ใบเสนอราคา', exact: true }).click();
   await panel(page).getByLabel('บันทึกส่วนตัวของแท็บนี้').fill('quotation state');
 
   for (let repeat = 0; repeat < 2; repeat++) {
-    await page.getByRole('button', { name: '2 ระบบขายและลูกหนี้', exact: true }).click();
-    await page
-      .getByRole('button', { name: '2.13 ขายสินค้า, บริการ พร้อมใช้งาน', exact: true })
-      .click();
+    await page.getByRole('button', { name: '2. ระบบขายและลูกหนี้', exact: true }).click();
+    await page.getByRole('button', { name: '2.13 ขายสินค้า, บริการ', exact: true }).click();
     await expect(page.getByRole('tab')).toHaveCount(2);
     await expect(
       page.getByRole('tab', { name: '2.13 ขายสินค้า, บริการ', exact: true }),
@@ -50,7 +48,7 @@ test('reopening a menu and clicking + reuse its tab and preserve each page state
         .evaluate((node) => node.scrollTop),
     ).toBe(180);
 
-    await page.getByRole('button', { name: '2 ระบบขายและลูกหนี้', exact: true }).click();
+    await page.getByRole('button', { name: '2. ระบบขายและลูกหนี้', exact: true }).click();
     await page.getByRole('button', { name: '2.2 ใบเสนอราคา', exact: true }).click();
     await expect(page.getByRole('tab')).toHaveCount(2);
     await expect(panel(page).getByLabel('บันทึกส่วนตัวของแท็บนี้')).toHaveValue('quotation state');

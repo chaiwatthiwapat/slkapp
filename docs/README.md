@@ -38,6 +38,7 @@ Implementation
 ใช้ React + TypeScript + CSS และแยก frontend/backend ใน repo เดียว
 ใช้ shared UI จาก frontend/src/components/ui แทนการสร้าง component ซ้ำในแต่ละหน้า
 ใช้สีจาก frontend/src/styles/tokens.css และรองรับขนาดผ่าน props ของ component
+ใช้ cursor: default (ลูกศรปกติ) ทุกส่วนและทุกสถานะ เปลี่ยนรูป cursor ได้เฉพาะเมื่อผู้ใช้สั่ง
 
 Workspace
 ----------

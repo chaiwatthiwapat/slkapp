@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Icon } from '../../components/ui';
 import { menuGroups, type MenuItem } from './menu';
 
 interface Props {
@@ -18,20 +17,6 @@ export function Navbar({ onOpen, activeMenu }: Props) {
   }, []);
   return (
     <header className="app-header">
-      <a
-        className="brand"
-        href="#"
-        aria-label="SLK Workspace"
-        onClick={(event) => event.preventDefault()}
-      >
-        <span className="brand-mark">
-          s<span>lk</span>
-        </span>
-        <span className="brand-text">
-          SLK<span>WORKSPACE</span>
-        </span>
-      </a>
-      <span className="header-divider" />
       <nav
         ref={nav}
         aria-label="ระบบงานหลัก"
@@ -66,16 +51,10 @@ export function Navbar({ onOpen, activeMenu }: Props) {
               aria-controls={`menu-${group.id}`}
               onClick={() => setOpen(open === group.id ? null : group.id)}
             >
-              <span className="nav-number">{group.id}</span>
-              <span>{group.title}</span>
-              <Icon name="down" size={12} />
+              {group.id}. {group.title}
             </button>
             {open === group.id && (
               <div className="nav-dropdown" id={`menu-${group.id}`}>
-                <div className="dropdown-caption">
-                  <Icon name={group.icon} />
-                  {group.title}
-                </div>
                 {group.items.map((item) => (
                   <button
                     key={item.id}
@@ -88,9 +67,6 @@ export function Navbar({ onOpen, activeMenu }: Props) {
                   >
                     <span className="menu-code mono">{item.id}</span>
                     <span>{item.title}</span>
-                    {item.kind === 'sale-and-service' && (
-                      <span className="menu-ready">พร้อมใช้งาน</span>
-                    )}
                   </button>
                 ))}
               </div>
@@ -98,21 +74,6 @@ export function Navbar({ onOpen, activeMenu }: Props) {
           </div>
         ))}
       </nav>
-      <div className="header-profile">
-        <span className="environment-badge">UI PREVIEW</span>
-        <Button
-          tone="neutral"
-          variant="ghost"
-          title="คู่มือเริ่มต้น"
-          aria-label="ข้อมูล workspace"
-          onClick={() => window.dispatchEvent(new Event('slkapp:help'))}
-        >
-          <Icon name="help" size={18} />
-        </Button>
-        <span className="avatar" title="บัญชีสาธิต">
-          CW
-        </span>
-      </div>
     </header>
   );
 }
